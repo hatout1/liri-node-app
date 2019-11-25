@@ -45,7 +45,7 @@ switch (commandOne) {
         spotifyResult();
         break;
     case ("concert-this"):
-        console.log(commandTwo);
+        // console.log(commandTwo);
         concertThisResult();
         break;
     case ("movie-this"):
@@ -83,11 +83,24 @@ function spotifyResult() {
 
 // function for Concert - `concert-this`
 
-
 function concertThisResult() {
-    const url = (`"https://rest.bandsintown.com/artists/${commandTwo}/events?app_id=codingbootcamp"`);
 
-    console.log(url)
+    axios.get("https://rest.bandsintown.com/artists/" + commandTwo + "/events?app_id=codingbootcamp")
+        .then(res => {
+
+            var datetime = res.data[0].datetime;
+            var dateArr = datetime.split('T');
+            var Date = moment(dateArr[0], "MM-DD-YYYY");
+            console.log(res.data[0].venue.name);
+            console.log(res.data[0].venue.city);
+            console.log(Date)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+
+    // console.log(url)
 
 }
 
