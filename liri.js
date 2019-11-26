@@ -4,12 +4,10 @@ const keys = require("./keys.js")
 const Spotify = require('node-spotify-api');
 const spotify = new Spotify(keys.spotify);
 const moment = require("moment");
-moment().format("MM/DD/YYYY");
+var timenow = moment().format("MM/DD/YYYY");
 const fs = require('fs');
 const arg = process.argv;
 const axios = require("axios")
-
-// console.log(moment)
 
 var inquirer = require("inquirer");
 
@@ -42,10 +40,9 @@ let commandOne = arg[2]
 switch (commandOne) {
     case ("spotify-this-song"):
         console.log(commandTwo);
-        spotifyResult();
+        spotifyResult(commandTwo);
         break;
     case ("concert-this"):
-        // console.log(commandTwo);
         concertThisResult();
         break;
     case ("movie-this"):
@@ -56,17 +53,13 @@ switch (commandOne) {
         console.log(commandTwo);
         doWhatItSaysResult();
         break;
-
     default:
         console.log("Go homme")
         break;
 }
 
-
-
 // function for Spotify - `spotify-this-song`
-
-function spotifyResult() {
+function spotifyResult(commandTwo) {
     spotify
         .search({ type: 'track', query: commandTwo })
         .then(function (response) {
@@ -80,40 +73,62 @@ function spotifyResult() {
         });
 }
 
-
 // function for Concert - `concert-this`
-
 function concertThisResult() {
 
     axios.get("https://rest.bandsintown.com/artists/" + commandTwo + "/events?app_id=codingbootcamp")
         .then(res => {
 
-            var datetime = res.data[0].datetime;
-            var dateArr = datetime.split('T');
-            var Date = moment(dateArr[0], "MM-DD-YYYY");
+            var datetime = moment(res.data[0].datetime);
+
+            var DateOfEvent = datetime.format("MM-DD-YYYY");
             console.log(res.data[0].venue.name);
             console.log(res.data[0].venue.city);
-            console.log(Date)
+            console.log(DateOfEvent)
         })
         .catch(function (error) {
             console.log(error);
         });
-
-
-    // console.log(url)
-
 }
 
 // function for Movies - `movie-this`
-function movieThisResult() {
+function movieThisResult(movie) {
 
+    axios.get("http://www.omdbapi.com/?t=" + commandTwo + "&y=&plot=short&tomatoes=true&apikey=trilogy").then(
+        function (response) {
+            //console.log(response.data);
+            if (response.data.Title != undefined) {
+                console.log("Title: " + response.data.Title); // Title of the movie.
+                console.log("Year: " + response.data.Year); // Year the movie came out.
+                console.log("imdbRating:: " + response.data.imdbRating); // IMDB Rating of the movie.
+                console.log("RottenTomatoes: " + response.data.tomatoRating);// Rotten Tomatoes Rating of the movie.
+                console.log("Country:: " + response.data.Country);  // Country where the movie was produced.
+                console.log("Language:: " + response.data.Language); // Language of the movie.
+                console.log("Plot: " + response.data.Plot); // Plot of the movie.
+                console.log("Actors: " + response.data.Actors); // Actors in the movie.
+            }
+            else {
 
+                console.log("If you haven't watched  'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/")
+                console.log("It's on Netflix!")
+
+            }
+        }
+        // if response is empty call the api again with the "default" movie 
+    ).catch(function (error) {
+        console.log(error);
+    });
 }
 
-
 // function for elseDo - `do-what-it-says`
-
 function doWhatItSaysResult() {
-
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        var dataArr = data.split(",");
+        spotifyResult(dataArr[1])
+        // If the code experiences any errors it will log the error to the console.
+        if (error) {
+            return console.log(error);
+        }
+    });
 
 }
