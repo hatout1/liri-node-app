@@ -4,7 +4,7 @@ const keys = require("./keys.js")
 const Spotify = require('node-spotify-api');
 const spotify = new Spotify(keys.spotify);
 const moment = require("moment");
-var timenow = moment().format("MM/DD/YYYY");
+var timenow = moment();
 const fs = require('fs');
 const arg = process.argv;
 const axios = require("axios")
@@ -41,20 +41,33 @@ switch (commandOne) {
     case ("spotify-this-song"):
         console.log(commandTwo);
         spotifyResult(commandTwo);
+        fs.appendFile('History.txt', timenow.format("MM/DD/YYYY h:mm A") + "\n" + commandOne + ": " + commandTwo + ";\n" + "------------------------------------------------\n", function (err) {
+            if (err) throw err;
+        });
+
         break;
     case ("concert-this"):
         concertThisResult();
+        fs.appendFile('History.txt', timenow.format("MM/DD/YYYY h:mm A") + "\n" + commandOne + ": " + commandTwo + ";\n" + "------------------------------------------------\n", function (err) {
+            if (err) throw err;
+        });
         break;
     case ("movie-this"):
         console.log(commandTwo);
         movieThisResult();
+        fs.appendFile('History.txt', timenow.format("MM/DD/YYYY h:mm A") + "\n" + commandOne + ": " + commandTwo + ";\n" + "------------------------------------------------\n", function (err) {
+            if (err) throw err;
+        });
         break;
     case ("do-what-it-says"):
         console.log(commandTwo);
         doWhatItSaysResult();
+        fs.appendFile('History.txt', timenow.format("MM/DD/YYYY h:mm A") + "\n" + commandOne + ": " + commandTwo + ";\n" + "------------------------------------------------\n", function (err) {
+            if (err) throw err;
+        });
         break;
     default:
-        console.log("Go homme")
+        console.log("Sorry, somthing went wrong lest's try again!!")
         break;
 }
 
