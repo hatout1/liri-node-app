@@ -7,7 +7,8 @@ const moment = require("moment");
 var timenow = moment();
 const fs = require('fs');
 const arg = process.argv;
-const axios = require("axios")
+const axios = require("axios");
+const chalk = require('chalk');
 
 var inquirer = require("inquirer");
 
@@ -39,7 +40,7 @@ let commandOne = arg[2]
 
 switch (commandOne) {
     case ("spotify-this-song"):
-        console.log(commandTwo);
+        // console.log(chalk.blue(commandTwo));
         spotifyResult(commandTwo);
         fs.appendFile('History.txt', timenow.format("MM/DD/YYYY h:mm A") + "\n" + commandOne + ": " + commandTwo + ";\n" + "------------------------------------------------\n", function (err) {
             if (err) throw err;
@@ -53,14 +54,14 @@ switch (commandOne) {
         });
         break;
     case ("movie-this"):
-        console.log(commandTwo);
+        // console.log(commandTwo);
         movieThisResult();
         fs.appendFile('History.txt', timenow.format("MM/DD/YYYY h:mm A") + "\n" + commandOne + ": " + commandTwo + ";\n" + "------------------------------------------------\n", function (err) {
             if (err) throw err;
         });
         break;
     case ("do-what-it-says"):
-        console.log(commandTwo);
+        // console.log(commandTwo);
         doWhatItSaysResult();
         fs.appendFile('History.txt', timenow.format("MM/DD/YYYY h:mm A") + "\n" + commandOne + ": " + commandTwo + ";\n" + "------------------------------------------------\n", function (err) {
             if (err) throw err;
@@ -76,10 +77,10 @@ function spotifyResult(commandTwo) {
     spotify
         .search({ type: 'track', query: commandTwo })
         .then(function (response) {
-            console.log(response.tracks.items[0].album.artists[0].name); // Artist name
-            console.log(response.tracks.items[0].preview_url); // Song url
-            console.log(response.tracks.items[0].name); // song name
-            console.log(response.tracks.items[0].album.name); // Album name
+            console.log(chalk.blue(response.tracks.items[0].album.artists[0].name)); // Artist name
+            console.log(chalk.blue(response.tracks.items[0].preview_url)); // Song url
+            console.log(chalk.blue(response.tracks.items[0].name)); // song name
+            console.log(chalk.blue(response.tracks.items[0].album.name)); // Album name
         })
         .catch(function (err) {
             console.log(err);
@@ -95,15 +96,14 @@ function concertThisResult() {
             var datetime = moment(res.data[0].datetime);
 
             var DateOfEvent = datetime.format("MM-DD-YYYY");
-            console.log(res.data[0].venue.name);
-            console.log(res.data[0].venue.city);
-            console.log(DateOfEvent)
+            console.log(chalk.yellow(res.data[0].venue.name));
+            console.log(chalk.yellow(res.data[0].venue.city));
+            console.log(chalk.yellow(DateOfEvent));
         })
         .catch(function (error) {
             console.log(error);
         });
 }
-
 // function for Movies - `movie-this`
 function movieThisResult(movie) {
 
@@ -111,20 +111,18 @@ function movieThisResult(movie) {
         function (response) {
             //console.log(response.data);
             if (response.data.Title != undefined) {
-                console.log("Title: " + response.data.Title); // Title of the movie.
-                console.log("Year: " + response.data.Year); // Year the movie came out.
-                console.log("imdbRating:: " + response.data.imdbRating); // IMDB Rating of the movie.
-                console.log("RottenTomatoes: " + response.data.tomatoRating);// Rotten Tomatoes Rating of the movie.
-                console.log("Country:: " + response.data.Country);  // Country where the movie was produced.
-                console.log("Language:: " + response.data.Language); // Language of the movie.
-                console.log("Plot: " + response.data.Plot); // Plot of the movie.
-                console.log("Actors: " + response.data.Actors); // Actors in the movie.
+                console.log(chalk.cyan("Title: " + response.data.Title)); // Title of the movie.
+                console.log(chalk.cyan("Year: " + response.data.Year)); // Year the movie came out.
+                console.log(chalk.cyan("imdbRating:: " + response.data.imdbRating)); // IMDB Rating of the movie.
+                console.log(chalk.cyan("RottenTomatoes: " + response.data.tomatoRating));// Rotten Tomatoes Rating of the movie.
+                console.log(chalk.cyan("Country:: " + response.data.Country));  // Country where the movie was produced.
+                console.log(chalk.cyan("Language:: " + response.data.Language)); // Language of the movie.
+                console.log(chalk.cyan("Plot: " + response.data.Plot)); // Plot of the movie.
+                console.log(chalk.cyan("Actors: " + response.data.Actors)); // Actors in the movie.
             }
             else {
-
-                console.log("If you haven't watched  'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/")
-                console.log("It's on Netflix!")
-
+                console.log(chalk.green("If you haven't watched  'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/"));
+                console.log(chalk.red("It's on Netflix!"));
             }
         }
         // if response is empty call the api again with the "default" movie 
