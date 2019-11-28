@@ -1,15 +1,15 @@
 # liri-node-app
 
-After cloning this app the user must creat a .env file with
+**After cloning this app the user must creat a .env file with**
 
 
-*Spotify API keys*
+ # Spotify API keys
 
 
 **SPOTIFY_ID=your-spotify-id**
 
 **SPOTIFY_SECRET=your-spotify-secret**
-
+----------------------------------------------------------
 
 
 *******   **spotify this song**  ***********
